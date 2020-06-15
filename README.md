@@ -1,1 +1,3 @@
-# fetch_api
+# Fetch API 
+
+* Using Promises
