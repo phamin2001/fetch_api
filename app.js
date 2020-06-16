@@ -18,16 +18,32 @@ document.getElementById('button3').addEventListener('click', getExternal);
 // }
 
 // Arrow function
+// function getText() {
+//   fetch('test.txt')
+//     .then(res => res.text())
+//     .then(data => {
+//       console.log(data);
+//       document.getElementById('output').innerHTML = data;
+//     })
+//     .catch(err => console.log(err));
+// }
+
+// Handeling Error with Fetch
 function getText() {
   fetch('test.txt')
-    .then(res => res.text())
-    .then(data => {
+    .then((res) => {
+      if (!res.ok)
+        throw new Error(
+          `It all went horribly wrong!!: ${res.status} ${res.statusText}`
+        );
+      else return res.text();
+    })
+    .then((data) => {
       console.log(data);
       document.getElementById('output').innerHTML = data;
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 }
-
 
 // Get local json data
 // function getJson() {
@@ -49,10 +65,25 @@ function getText() {
 // }
 
 // Arrow function
+// function getJson() {
+//   fetch('post.json')
+//     .then(res => res.json())
+//     .then(data => {
+//       console.log(data);
+//       let output = '';
+//       data.forEach(function (post) {
+//         output += `<li>${post.title}</li>`;
+//       });
+//       document.getElementById('output').innerHTML = output;
+//     })
+//     .catch(err => console.log(err));
+// }
+
+// Handeling Error with Fetch
 function getJson() {
   fetch('post.json')
-    .then(res => res.json())
-    .then(data => {
+    .then(handleErrors)
+    .then((data) => {
       console.log(data);
       let output = '';
       data.forEach(function (post) {
@@ -60,7 +91,7 @@ function getJson() {
       });
       document.getElementById('output').innerHTML = output;
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 }
 
 // Get from external url
@@ -83,16 +114,38 @@ function getJson() {
 // }
 
 // Arrow function
+// function getExternal() {
+//   fetch('https://api.github.com/users')
+//     .then(res => res.json())
+//     .then(data => {
+//       console.log(data);
+//       let output = '';
+//       data.forEach(function (user) {
+//         output += `<li>${user.login}</li>`;
+//       });
+//       document.getElementById('output').innerHTML = output;
+//     })
+//     .catch(err => console.log(err));
+// }
+
+// Handling Error with Fetch
 function getExternal() {
   fetch('https://api.github.com/users')
-    .then(res => res.json())
-    .then(data => {
+    .then(handleErrors)
+    .then((data) => {
       console.log(data);
       let output = '';
-      data.forEach(function (user) {
-        output += `<li>${user.login}</li>`;
-      });
+      data.forEach((user) => (output += `<li>${user.login}</li>`));
       document.getElementById('output').innerHTML = output;
     })
-    .catch(err => console.log(err));
+    .catch(console.log);
+}
+
+// Error Function
+function handleErrors(res) {
+  if (!res.ok)
+    throw new Error(
+      `It all went horribly wrong!!: ${res.status} ${res.statusText}`
+    );
+  else return res.json();
 }
